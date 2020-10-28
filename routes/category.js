@@ -9,6 +9,7 @@ router.get('/',passportProtect,controller.getAll)
 router.get('/:id',passportProtect,controller.getById)
 router.delete('/:id',passportProtect,controller.remove)
 router.post('/',passportProtect,upload.single('image'),controller.create)
-router.patch('/:id',passportProtect,controller.update)
+router.patch('/:id',passportProtect,upload.single('image'),controller.update)
 
 module.exports = router
+

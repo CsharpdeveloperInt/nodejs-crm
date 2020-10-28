@@ -21,8 +21,10 @@ require('./middleware/passport')(passport)
 app.use('/data/images',express.static('data/images'))
 app.use(require('morgan')('dev'))
 app.use(require('cors')())
+/*
 app.use(bodyParser.urlencoded({extended: true}))
-app.use(bodyParser.json())
+app.use(bodyParser.json())*/
+app.use(express.json())
 
 app.use('/api/auth', authRoutes)
 app.use('/api/analytics', analyticsRoutes)
