@@ -1,11 +1,12 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { CategoriesService } from 'src/app/shared/services/categories.service';
 import { MaterialService } from 'src/app/shared/services/material.service';
 import { switchMap } from 'rxjs/operators';
 import { of, Subscription } from 'rxjs';
 import { Category } from 'src/app/shared/interfaces';
+import { error } from 'protractor';
 
 @Component({
   selector: 'app-categories-form',
@@ -22,7 +23,7 @@ export class CategoriesFormComponent implements OnInit {
   form: FormGroup
   lCat: Category
 
-  constructor(private route: ActivatedRoute,private catService: CategoriesService) {
+  constructor(private route: ActivatedRoute,private catService: CategoriesService,private router: Router) {
 
   }
 
@@ -78,20 +79,35 @@ export class CategoriesFormComponent implements OnInit {
     obs$.subscribe(
       category=>{
         this.lCat = category
-        console.log(category)
+
         MaterialService.toast('Изменения сохранены.')
         this.form.enable()
       },
       error =>{
         MaterialService.toast(error.error.message)
         this.form.enable()
-      }
+      },
+      ()=>this.router.navigate(['/categories'])
     )
   }
 
   triggerClick(){
     this.inputRef.nativeElement.click()
   }
+
+
+  deleteCategory(){
+    const decision = window.confirm(`Вы уверены,что хотите удалить категорию ${this.lCat.name} и ее позиции`)
+    if (decision){
+      this.catService.delete(this.lCat._id)
+      .subscribe(
+        response => MaterialService.toast(response.message),
+        error=> MaterialService.toast(error.error.message),
+        ()=>this.router.navigate(['/categories'])
+      )
+    }
+  }
+
 
   onFileUpload(event: any){
     const file = event.target.files[0]
