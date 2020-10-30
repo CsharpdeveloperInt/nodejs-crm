@@ -6,10 +6,11 @@ module.exports.getByCategoryId = async function(req,res){
     try
     {
         const positions= await Position.find({
-            category: req.params.categoryId,
+            category: req.params.categoryID,
             user: req.user.id
         })
-
+        
+        console.log(req.params.categoryID)
         res.status(200).json(positions)
     }
     catch(error){
