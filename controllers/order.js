@@ -36,6 +36,7 @@ module.exports.getAll = async function(req,res){
         .skip(+req.query.offset)
         .limit(+req.query.limit)
 
+       
         res.status(200).json(orders)
     }
     catch(error){
